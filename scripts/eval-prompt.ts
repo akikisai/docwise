@@ -43,7 +43,7 @@ function loadJsonl<T>(filename: string): T[] {
   return readFileSync(path, "utf-8")
     .trim()
     .split("\n")
-    .map((line) => JSON.parse(line) as T);
+    .map((line: string) => JSON.parse(line) as T);
 }
 
 async function evalClassifyQuery(): Promise<number> {

@@ -1,7 +1,5 @@
 import { Mastra } from "@mastra/core";
 import { PgVector } from "@mastra/pg";
-import { Observability, SamplingStrategyType } from "@mastra/observability";
-import { LangfuseExporter } from "@mastra/langfuse";
 import { ResultAsync, okAsync, errAsync } from "neverthrow";
 import pg from "pg";
 import { env } from "../env";
@@ -12,30 +10,8 @@ export { pgVector };
 
 const pool = new pg.Pool({ connectionString: env.POSTGRES_CONNECTION_STRING });
 
-const langfuseEnabled = env.LANGFUSE_PUBLIC_KEY !== "" && env.LANGFUSE_SECRET_KEY !== "";
-
-const observability = langfuseEnabled
-  ? new Observability({
-      configs: {
-        langfuse: {
-          serviceName: "docwise",
-          sampling: { type: SamplingStrategyType.ALWAYS },
-          exporters: [
-            new LangfuseExporter({
-              publicKey: env.LANGFUSE_PUBLIC_KEY,
-              secretKey: env.LANGFUSE_SECRET_KEY,
-              baseUrl: env.LANGFUSE_BASE_URL,
-              realtime: true,
-            }),
-          ],
-        },
-      },
-    })
-  : undefined;
-
 export const mastra = new Mastra({
   vectors: { pgVector },
-  ...(observability ? { observability } : {}),
 });
 
 export function ensureVectorIndex(): ResultAsync<void, Error> {

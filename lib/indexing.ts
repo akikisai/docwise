@@ -12,6 +12,7 @@ import pdfParse from "pdf-parse";
 import { toError } from "./errors";
 import { IMAGE_DESCRIPTION_PROMPT } from "./prompts/prompts";
 import { recordUsage } from "./usage-store";
+import { telemetryConfig } from "./langfuse";
 
 // PDFのテキスト抽出
 function parsePdf(buf: Buffer): ResultAsync<{ text: string }, Error> {
@@ -58,6 +59,7 @@ export function embedChunks(texts: string[]): ResultAsync<number[][], Error> {
       values: texts,
       model: google.embeddingModel("gemini-embedding-001"),
       providerOptions: { google: { outputDimensionality: 1536 } },
+      experimental_telemetry: telemetryConfig,
     }),
   ).map((r) => {
     recordUsage({
@@ -171,6 +173,7 @@ export async function indexImage({
           ],
         },
       ],
+      experimental_telemetry: telemetryConfig,
     }),
   ).map((r) => {
     recordUsage({

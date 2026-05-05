@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { secureHeaders } from "hono/secure-headers";
 import { serve } from "@hono/node-server";
+import "../../../lib/langfuse";
 import uploadRoute from "./routes/upload";
 import uploadStatusRoute from "./routes/upload-status";
 import filesRoute from "./routes/files";

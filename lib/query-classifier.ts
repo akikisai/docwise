@@ -3,6 +3,7 @@ import { google } from "@ai-sdk/google";
 import { z } from "zod";
 import { ResultAsync } from "neverthrow";
 import { toError } from "./errors";
+import { telemetryConfig } from "./langfuse";
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -28,6 +29,7 @@ export function classifyQuery(userMessage: string): ResultAsync<ClassifyResult, 
       model: google("gemini-2.5-flash"),
       output: Output.object({ schema: queryComplexitySchema }),
       prompt,
+      experimental_telemetry: telemetryConfig,
     }),
     toError,
   ).map((result) => ({

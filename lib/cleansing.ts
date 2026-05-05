@@ -4,6 +4,7 @@ import { ResultAsync } from "neverthrow";
 import { withRetry } from "./retry";
 import { CLEANSING_SYSTEM_PROMPT } from "./prompts/prompts";
 import { recordUsage } from "./usage-store";
+import { telemetryConfig } from "./langfuse";
 
 export function cleanseWithGemini(rawText: string): ResultAsync<string, Error> {
   const start = performance.now();
@@ -12,6 +13,7 @@ export function cleanseWithGemini(rawText: string): ResultAsync<string, Error> {
       model: google("gemini-2.5-flash"),
       system: CLEANSING_SYSTEM_PROMPT,
       prompt: rawText,
+      experimental_telemetry: telemetryConfig,
     }),
   ).map((result) => {
     recordUsage({

@@ -67,9 +67,7 @@ type FileRow = {
   content_hash: string | null;
 };
 
-export function findFileById(
-  fileId: string,
-): ResultAsync<
+export function findFileById(fileId: string): ResultAsync<
   | {
       fileId: string;
       fileName: string;

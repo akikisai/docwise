@@ -19,6 +19,7 @@ import { classifyQuery } from "../../../../lib/query-classifier";
 import { runKeywordSearch } from "../../../../lib/mastra/tools/keyword-search";
 import { runSemanticSearch } from "../../../../lib/mastra/tools/semantic-search";
 import { agentTools, AGENT_MAX_STEPS } from "../../../../lib/mastra/agent";
+import { telemetryConfig } from "../../../../lib/langfuse";
 
 const chatRoute = new Hono();
 
@@ -62,6 +63,7 @@ chatRoute.post("/", zValidator("json", uiChatRequestSchema), async (c) => {
       model: google("gemini-2.5-flash"),
       system: CASUAL_SYSTEM_PROMPT,
       messages: [...modelMessages, { role: "user" as const, content: latestUserMessage }],
+      experimental_telemetry: telemetryConfig,
       onFinish({ usage }) {
         recordUsage({
           step: "stream_simple",
@@ -85,6 +87,7 @@ chatRoute.post("/", zValidator("json", uiChatRequestSchema), async (c) => {
       messages: [...modelMessages, { role: "user" as const, content: latestUserMessage }],
       tools: agentTools,
       stopWhen: stepCountIs(AGENT_MAX_STEPS),
+      experimental_telemetry: telemetryConfig,
       onFinish({ usage }) {
         recordUsage({
           step: "stream_complex",
@@ -201,6 +204,7 @@ chatRoute.post("/", zValidator("json", uiChatRequestSchema), async (c) => {
     model: google("gemini-2.5-flash"),
     system: systemPrompt,
     messages: [...modelMessages, { role: "user" as const, content: userContent }],
+    experimental_telemetry: telemetryConfig,
     onFinish({ usage }) {
       recordUsage({
         step: "stream_moderate",

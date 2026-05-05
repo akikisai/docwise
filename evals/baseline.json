@@ -1,0 +1,5 @@
+{
+  "classify-query": 1,
+  "classify-intent": 1,
+  "docwise-answer": 1
+}
