@@ -1,6 +1,5 @@
 {
-  "cSpell.words": [
-    "neverthrow",
-    "pgvector"
-  ]
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "cSpell.words": ["docwise", "neverthrow", "pgvector"]
 }
