@@ -1,0 +1,13 @@
+{"input":"こんにちは","expected":"casual"}
+{"input":"おはよう","expected":"casual"}
+{"input":"Hi there","expected":"casual"}
+{"input":"ありがとう！","expected":"casual"}
+{"input":"元気ですか？","expected":"casual"}
+{"input":"何ができる？","expected":"casual"}
+{"input":"やあ","expected":"casual"}
+{"input":"S3のライフサイクルポリシーについて教えて","expected":"knowledge"}
+{"input":"VPCエンドポイントの設定方法は？","expected":"knowledge"}
+{"input":"CloudWatchのメトリクスでアラーム設定したい","expected":"knowledge"}
+{"input":"ECSとEKSの違いは？","expected":"knowledge"}
+{"input":"DynamoDBのパーティションキー設計","expected":"knowledge"}
+{"input":"Lambdaのコールドスタート対策","expected":"knowledge"}

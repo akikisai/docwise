@@ -11,6 +11,9 @@ const envSchema = z.object({
   S3_FORCE_PATH_STYLE: z.string().default("true"),
   PORT: z.string().default("3001"),
   LOCAL_FOLDER_PATH: z.string().default(""),
+  LANGFUSE_PUBLIC_KEY: z.string().default(""),
+  LANGFUSE_SECRET_KEY: z.string().default(""),
+  LANGFUSE_BASE_URL: z.string().default("https://cloud.langfuse.com"),
 });
 
 const parsed = envSchema.safeParse(process.env);
