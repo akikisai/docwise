@@ -43,7 +43,7 @@ export const chunkMetadataSchema = z.object({
 const partialChunkMetadataSchema = chunkMetadataSchema.partial();
 
 export function parseChunkMetadata(
-  raw: unknown
+  raw: unknown,
 ): z.infer<typeof partialChunkMetadataSchema> | undefined {
   const result = partialChunkMetadataSchema.safeParse(raw);
   return result.success ? result.data : undefined;

@@ -43,7 +43,7 @@ export function UsageBar() {
     fetch(`${API_BASE}/api/usage/today`)
       .then((r) => r.json())
       .then(setUsage)
-      .catch(() => { });
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -62,7 +62,8 @@ export function UsageBar() {
         className="w-full flex items-center justify-between px-6 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
       >
         <span>
-          今日のLLM使用量: {formatTokens(usage.totalTokens)} tokens / {usage.totalRequests} calls / avg {usage.avgLatencyMs}ms
+          今日のLLM使用量: {formatTokens(usage.totalTokens)} tokens / {usage.totalRequests} calls /
+          avg {usage.avgLatencyMs}ms
         </span>
         <span className="text-[10px]">{expanded ? "▲" : "▼"}</span>
       </button>

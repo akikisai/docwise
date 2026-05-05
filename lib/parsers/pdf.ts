@@ -9,8 +9,12 @@ export function parsePdfFile(buf: Buffer): ResultAsync<string, Error> {
       const origLog = console.log;
       const filter = (...args: unknown[]) =>
         typeof args[0] === "string" && args[0].includes("private use area");
-      console.warn = (...a: unknown[]) => { if (!filter(...a)) origWarn.apply(console, a); };
-      console.log = (...a: unknown[]) => { if (!filter(...a)) origLog.apply(console, a); };
+      console.warn = (...a: unknown[]) => {
+        if (!filter(...a)) origWarn.apply(console, a);
+      };
+      console.log = (...a: unknown[]) => {
+        if (!filter(...a)) origLog.apply(console, a);
+      };
       try {
         const result = await pdfParse(buf);
         return result.text;
@@ -19,6 +23,6 @@ export function parsePdfFile(buf: Buffer): ResultAsync<string, Error> {
         console.log = origLog;
       }
     })(),
-    toError
+    toError,
   );
 }

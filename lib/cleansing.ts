@@ -12,7 +12,7 @@ export function cleanseWithGemini(rawText: string): ResultAsync<string, Error> {
       model: google("gemini-2.5-flash"),
       system: CLEANSING_SYSTEM_PROMPT,
       prompt: rawText,
-    })
+    }),
   ).map((result) => {
     recordUsage({
       step: "cleanse_pdf",

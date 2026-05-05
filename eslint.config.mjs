@@ -16,10 +16,6 @@ export default tseslint.config(
   },
   {
     // 自動生成ファイルはチェック対象外
-    ignores: [
-      "**/routeTree.gen.ts",
-      "**/dist/**",
-      "**/node_modules/**",
-    ],
-  }
+    ignores: ["**/routeTree.gen.ts", "**/dist/**", "**/node_modules/**"],
+  },
 );

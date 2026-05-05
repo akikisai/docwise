@@ -1,9 +1,5 @@
 import pg from "pg";
-import {
-  S3Client,
-  ListObjectsV2Command,
-  DeleteObjectsCommand,
-} from "@aws-sdk/client-s3";
+import { S3Client, ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { env } from "../lib/env";
 
 const pool = new pg.Pool({ connectionString: env.POSTGRES_CONNECTION_STRING });
@@ -38,7 +34,7 @@ async function resetS3() {
       new ListObjectsV2Command({
         Bucket: bucket,
         ContinuationToken: continuationToken,
-      })
+      }),
     );
 
     const objects = list.Contents;
@@ -49,14 +45,12 @@ async function resetS3() {
           Delete: {
             Objects: objects.map((o) => ({ Key: o.Key })),
           },
-        })
+        }),
       );
       deletedCount += objects.length;
     }
 
-    continuationToken = list.IsTruncated
-      ? list.NextContinuationToken
-      : undefined;
+    continuationToken = list.IsTruncated ? list.NextContinuationToken : undefined;
   } while (continuationToken);
 
   console.info(`[reset] S3オブジェクト ${deletedCount} 件削除完了`);

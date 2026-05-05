@@ -4,7 +4,12 @@ import { UploadUI, type UploadedFile } from "../components/UploadUI";
 import { DocumentList } from "../components/DocumentList";
 import { ChatUI } from "../components/ChatUI";
 import { LocalSourceUI } from "../components/LocalSourceUI";
-import { FolderOpenIcon, ChatsCircleIcon, FolderSimpleIcon, FilesIcon } from "@phosphor-icons/react";
+import {
+  FolderOpenIcon,
+  ChatsCircleIcon,
+  FolderSimpleIcon,
+  FilesIcon,
+} from "@phosphor-icons/react";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { API_BASE } from "../lib/api";
 import type { FileRecord } from "../../../../packages/shared/src/types";
@@ -31,7 +36,7 @@ function HomePage() {
             fileType: f.fileType,
             status: "done" as const,
             chunkCount: f.chunkCount,
-          }))
+          })),
         );
       })
       .catch((err) => {
@@ -48,9 +53,7 @@ function HomePage() {
   };
 
   const handleStatusUpdate = (jobId: string, updates: Partial<UploadedFile>) => {
-    setFiles((prev) =>
-      prev.map((f) => (f.jobId === jobId ? { ...f, ...updates } : f))
-    );
+    setFiles((prev) => prev.map((f) => (f.jobId === jobId ? { ...f, ...updates } : f)));
   };
 
   const handleDeleteFile = (fileId: string) => {
@@ -77,10 +80,7 @@ function HomePage() {
           <UploadUI onUploadStart={handleUploadStart} onStatusUpdate={handleStatusUpdate} />
         </div>
         <div className="flex-1 overflow-y-auto px-5 pb-3">
-          <DocumentList
-            files={files}
-            onDelete={handleDeleteFile}
-          />
+          <DocumentList files={files} onDelete={handleDeleteFile} />
         </div>
       </div>
 

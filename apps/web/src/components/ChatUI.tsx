@@ -29,7 +29,10 @@ export function ChatUI() {
 
   return (
     <div className="flex flex-col h-full">
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-6 py-4 space-y-4 scroll-smooth">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto px-6 py-4 space-y-4 scroll-smooth"
+      >
         {messages.length === 0 && (
           <div className="flex items-center justify-center h-full">
             <EmptyState
@@ -52,9 +55,7 @@ export function ChatUI() {
             .map((p) => p.text)
             .join("");
 
-          const toolParts = chatMessage.parts.filter(
-            (p) => p.type === "dynamic-tool",
-          );
+          const toolParts = chatMessage.parts.filter((p) => p.type === "dynamic-tool");
           const hasTools = toolParts.length > 0;
 
           if (chatMessage.role === "user") {
@@ -193,9 +194,7 @@ function SearchStepItem({
       {state === "output-available" && (
         <span className="text-accent">→ {formatToolResult(output)}</span>
       )}
-      {state === "output-error" && (
-        <span className="text-destructive">→ エラー</span>
-      )}
+      {state === "output-error" && <span className="text-destructive">→ エラー</span>}
     </div>
   );
 }

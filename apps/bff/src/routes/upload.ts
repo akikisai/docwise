@@ -26,21 +26,14 @@ uploadRoute.post("/", async (c) => {
   }
 
   if (uploadedFile.size > MAX_UPLOAD_BYTES) {
-    return c.json(
-      { error: "ファイルサイズは20MB以下にしてください" },
-      413
-    );
+    return c.json({ error: "ファイルサイズは20MB以下にしてください" }, 413);
   }
 
-  const extension =
-    uploadedFile.name.split(".").pop()?.toLowerCase() ?? "";
+  const extension = uploadedFile.name.split(".").pop()?.toLowerCase() ?? "";
   const fileType = ACCEPTED_EXTENSIONS[extension];
 
   if (!fileType) {
-    return c.json(
-      { error: "対応していないファイル形式です（PDF / PNG / JPG）" },
-      400
-    );
+    return c.json({ error: "対応していないファイル形式です（PDF / PNG / JPG）" }, 400);
   }
 
   const fileId = generateId();

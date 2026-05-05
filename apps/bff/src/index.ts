@@ -19,12 +19,12 @@ const app = new Hono();
 
 app.use("*", logger());
 app.use("*", secureHeaders());
-app.use("*", cors({
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:8080",
-  ],
-}));
+app.use(
+  "*",
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:8080"],
+  }),
+);
 
 app.route("/api/upload", uploadRoute);
 app.route("/api/upload/status", uploadStatusRoute);

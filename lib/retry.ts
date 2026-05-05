@@ -7,7 +7,7 @@ export type RetryOptions = {
 
 export function withRetry<T>(
   fn: () => Promise<T>,
-  { maxRetries = 3, baseDelayMs = 1000 }: RetryOptions = {}
+  { maxRetries = 3, baseDelayMs = 1000 }: RetryOptions = {},
 ): ResultAsync<T, Error> {
   const attempt = async (remaining: number): Promise<T> => {
     try {
@@ -25,6 +25,6 @@ export function withRetry<T>(
   };
 
   return ResultAsync.fromPromise(attempt(maxRetries), (e) =>
-    e instanceof Error ? e : new Error(String(e))
+    e instanceof Error ? e : new Error(String(e)),
   );
 }

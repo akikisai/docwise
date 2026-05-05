@@ -52,15 +52,13 @@ export function scanLocalFolder(basePath: string): ResultAsync<LocalFileEntry[],
       await walk(basePath);
       return entries;
     })(),
-    toError
+    toError,
   );
 }
 
 export function computeFileHash(filePath: string): ResultAsync<string, Error> {
   return ResultAsync.fromPromise(
-    fs.readFile(filePath).then((buf) =>
-      crypto.createHash("sha256").update(buf).digest("hex")
-    ),
-    toError
+    fs.readFile(filePath).then((buf) => crypto.createHash("sha256").update(buf).digest("hex")),
+    toError,
   );
 }

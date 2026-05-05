@@ -63,10 +63,13 @@ localSourcesRoute.post("/sync", async (c) => {
     for (const fileId of existingFileIds.value) {
       const deleteResult = await ResultAsync.fromPromise(
         pgVector.deleteVectors({ indexName: "rag_chunks", filter: { fileId } }),
-        toError
+        toError,
       );
       if (deleteResult.isErr()) {
-        console.error(`[local-sources] ベクトル削除失敗 (fileId=${fileId}):`, deleteResult.error.message);
+        console.error(
+          `[local-sources] ベクトル削除失敗 (fileId=${fileId}):`,
+          deleteResult.error.message,
+        );
       }
     }
 
@@ -82,7 +85,10 @@ localSourcesRoute.post("/sync", async (c) => {
       const fileId = generateId();
       const resolveResult = await resolveSafePath(basePath, file.relativePath);
       if (resolveResult.isErr()) {
-        console.error(`[local-sources] パス検証失敗: ${file.relativePath}`, resolveResult.error.message);
+        console.error(
+          `[local-sources] パス検証失敗: ${file.relativePath}`,
+          resolveResult.error.message,
+        );
         SyncJobStore.increment(jobId);
         continue;
       }
@@ -97,7 +103,10 @@ localSourcesRoute.post("/sync", async (c) => {
       });
 
       if (result.isErr()) {
-        console.error(`[local-sources] ファイル取り込み失敗: ${file.relativePath}`, result.error.message);
+        console.error(
+          `[local-sources] ファイル取り込み失敗: ${file.relativePath}`,
+          result.error.message,
+        );
       }
 
       SyncJobStore.increment(jobId);
@@ -122,7 +131,7 @@ localSourcesRoute.get(
     }
 
     return c.json(job);
-  }
+  },
 );
 
 // ローカル取り込みデータ全削除
@@ -140,10 +149,13 @@ localSourcesRoute.delete("/data", async (c) => {
   for (const fileId of existingFileIds.value) {
     const deleteResult = await ResultAsync.fromPromise(
       pgVector.deleteVectors({ indexName: "rag_chunks", filter: { fileId } }),
-      toError
+      toError,
     );
     if (deleteResult.isErr()) {
-      console.error(`[local-sources] ベクトル削除失敗 (fileId=${fileId}):`, deleteResult.error.message);
+      console.error(
+        `[local-sources] ベクトル削除失敗 (fileId=${fileId}):`,
+        deleteResult.error.message,
+      );
     }
   }
 

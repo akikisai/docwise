@@ -41,10 +41,7 @@ export function DocumentList({
 
   if (files.length === 0) {
     return (
-      <EmptyState
-        icon={FileArrowUpIcon}
-        description="ファイルをアップロードして検索対象に追加"
-      />
+      <EmptyState icon={FileArrowUpIcon} description="ファイルをアップロードして検索対象に追加" />
     );
   }
 
@@ -65,10 +62,7 @@ export function DocumentList({
               <FileTextIcon size={16} weight="duotone" />
             )}
           </span>
-          <span
-            className="flex-1 min-w-0 truncate text-foreground"
-            title={file.fileName}
-          >
+          <span className="flex-1 min-w-0 truncate text-foreground" title={file.fileName}>
             {file.fileName}
           </span>
           <span className="shrink-0 text-muted-foreground font-mono">

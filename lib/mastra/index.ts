@@ -41,7 +41,7 @@ export const mastra = new Mastra({
 export function ensureVectorIndex(): ResultAsync<void, Error> {
   return ResultAsync.fromPromise(
     pgVector.createIndex({ indexName: "rag_chunks", dimension: 1536 }),
-    (e) => e instanceof Error ? e : new Error(String(e))
+    (e) => (e instanceof Error ? e : new Error(String(e))),
   ).orElse((indexErr) => {
     const alreadyExists =
       indexErr.message.includes("already exists") || indexErr.message.includes("ALREADY_EXISTS");

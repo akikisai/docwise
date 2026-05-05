@@ -7,7 +7,9 @@ const pool = new pg.Pool({ connectionString: env.POSTGRES_CONNECTION_STRING });
 
 export function ensureUsageTable(): ResultAsync<void, Error> {
   return ResultAsync.fromPromise(
-    pool.query(`
+    pool
+      .query(
+        `
       CREATE TABLE IF NOT EXISTS llm_usage (
         id               BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         session_id       TEXT,
@@ -19,8 +21,10 @@ export function ensureUsageTable(): ResultAsync<void, Error> {
         latency_ms       INT NOT NULL DEFAULT 0,
         created_at       TIMESTAMPTZ NOT NULL DEFAULT now()
       )
-    `).then(() => undefined),
-    toError
+    `,
+      )
+      .then(() => undefined),
+    toError,
   );
 }
 
@@ -53,7 +57,7 @@ export function recordUsage(record: UsageRecord): void {
         safeInt(record.completionTokens),
         safeInt(record.totalTokens),
         safeInt(record.latencyMs),
-      ]
+      ],
     )
     .catch((err: unknown) => console.error("[usage] 記録失敗:", err));
 }
@@ -103,7 +107,7 @@ export function getTodayUsage(): ResultAsync<DailyUsageSummary, Error> {
              COALESCE(SUM(total_tokens), 0)::int       AS total_tokens,
              COALESCE(AVG(latency_ms), 0)::int         AS avg_latency_ms
            FROM llm_usage
-           WHERE created_at >= CURRENT_DATE`
+           WHERE created_at >= CURRENT_DATE`,
         ),
         pool.query<StepRow>(
           `SELECT
@@ -116,7 +120,7 @@ export function getTodayUsage(): ResultAsync<DailyUsageSummary, Error> {
            FROM llm_usage
            WHERE created_at >= CURRENT_DATE
            GROUP BY step
-           ORDER BY total_tokens DESC`
+           ORDER BY total_tokens DESC`,
         ),
       ]);
 
@@ -137,6 +141,6 @@ export function getTodayUsage(): ResultAsync<DailyUsageSummary, Error> {
         })),
       };
     })(),
-    toError
+    toError,
   );
 }

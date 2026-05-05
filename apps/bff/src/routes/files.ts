@@ -39,7 +39,7 @@ filesRoute.delete("/:fileId", zValidator("param", fileIdParamSchema), async (c) 
 
   const deleteVectorsResult = await ResultAsync.fromPromise(
     pgVector.deleteVectors({ indexName: "rag_chunks", filter: { fileId } }),
-    toError
+    toError,
   );
 
   if (deleteVectorsResult.isErr()) {

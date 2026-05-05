@@ -36,5 +36,5 @@ if (!rootElement) throw new Error("Root element not found");
 createRoot(rootElement).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>
+  </StrictMode>,
 );

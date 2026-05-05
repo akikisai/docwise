@@ -10,32 +10,32 @@
 
 ### Adaptive RAG: 質問の複雑さで検索戦略を自動切替
 
-| simple（検索スキップ） | moderate（ハイブリッド検索1回） |
-|---|---|
+| simple（検索スキップ）                                        | moderate（ハイブリッド検索1回）                        |
+| ------------------------------------------------------------- | ------------------------------------------------------ |
 | <img src="images/casual-question.gif" alt="" height="150px"/> | <img src="images/moderate.gif" alt="" height="150px"/> |
 
 ### Agentic RAG: エージェントが検索ツールを自律選択
 
-| complex質問 → ツール選択・ステップ可視化 |
-|---|
+| complex質問 → ツール選択・ステップ可視化              |
+| ----------------------------------------------------- |
 | <img src="images/complex.gif" alt="" height="150px"/> |
 
 ### ドキュメント取り込み
 
-| PDF アップロード | 画像アップロード | フォルダ連携 |
-|---|---|---|
+| PDF アップロード                                         | 画像アップロード                                           | フォルダ連携                                         |
+| -------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
 | <img src="images/pdf-upload.gif" alt="" height="150px"/> | <img src="images/image-upload.gif" alt="" height="150px"/> | <img src="images/folder.gif" alt="" height="150px"/> |
 
 ### マルチモーダル RAG
 
-| 画像グラフの質問 | 動物画像の質問 |
-|---|---|
+| 画像グラフの質問                                                             | 動物画像の質問                                                             |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | <img src="images/knowledge-image-question-graph.gif" alt="" height="150px"/> | <img src="images/knowledge-image-question-dog.gif" alt="" height="150px"/> |
 
 ### Usage
 
-| Token使用量 |
-|---|
+| Token使用量                                         |
+| --------------------------------------------------- |
 | <img src="images/usage.png" alt="" height="100px"/> |
 
 ---
@@ -43,30 +43,30 @@
 ## 主な機能
 
 - **ストリーミング応答**
-    - AI SDKの`streamText` + `toUIMessageStreamResponse()`を使用
+  - AI SDKの`streamText` + `toUIMessageStreamResponse()`を使用
 - **Adaptive RAG（3段階クエリ分類）**
-    - Geminiで質問を以下のように分類し、複雑さに応じて検索戦略を動的に切り替える
-      - `simple`: LLM直答（検索コストなし）
-      - `moderate`: ハイブリッド検索を1回行う
-      - `complex`: Agentic RAGに任せる
+  - Geminiで質問を以下のように分類し、複雑さに応じて検索戦略を動的に切り替える
+    - `simple`: LLM直答（検索コストなし）
+    - `moderate`: ハイブリッド検索を1回行う
+    - `complex`: Agentic RAGに任せる
 - **Agentic RAG（エージェント自律検索）**
-    - complex判定時、エージェントが3つの検索ツール以下のツールを自律的に選択・複数回実行
-      - keywordSearch
-      - semanticSearch
-      - chunkDeepRead）
-    - `streamText` + `stopWhen: stepCountIs(3)` で最大3ステップの検索を実行し、UI上で検索プロセスをリアルタイム可視化
+  - complex判定時、エージェントが3つの検索ツール以下のツールを自律的に選択・複数回実行
+    - keywordSearch
+    - semanticSearch
+    - chunkDeepRead）
+  - `streamText` + `stopWhen: stepCountIs(3)` で最大3ステップの検索を実行し、UI上で検索プロセスをリアルタイム可視化
 - **ハイブリッド検索（moderate ルート）**
-    - tsvector全文検索（`ts_rank`）とベクトル類似度検索を`Promise.all`で並列実行し、結果をマージ・重複排除
+  - tsvector全文検索（`ts_rank`）とベクトル類似度検索を`Promise.all`で並列実行し、結果をマージ・重複排除
 - **スコア閾値フィルタリング**
-    - ベクトル検索に`minScore: 0.3`を設定し、無関係なチャンクの混入を防止
+  - ベクトル検索に`minScore: 0.3`を設定し、無関係なチャンクの混入を防止
 - **マルチモーダルRAG**
-    - 画像アップロード時に`GeminiVision`で内容をテキスト化し、元画像も検索ヒット時にLLMに渡す。索引と参照資料の役割を分離
+  - 画像アップロード時に`GeminiVision`で内容をテキスト化し、元画像も検索ヒット時にLLMに渡す。索引と参照資料の役割を分離
 - **PDFクレンジング**
-    - pdf-parseで抽出したテキストをGeminiで整形（OCRノイズ除去 + Markdown変換）してからチャンキング
+  - pdf-parseで抽出したテキストをGeminiで整形（OCRノイズ除去 + Markdown変換）してからチャンキング
 - **非同期インデックス登録**
-    - アップロード即レスポンス + jobIdポーリングで進捗監視。バックグラウンドでEmbedding → pgvector保存
+  - アップロード即レスポンス + jobIdポーリングで進捗監視。バックグラウンドでEmbedding → pgvector保存
 - **トークン使用量トラッキング**
-    - 全LLM呼び出しのトークン数・レイテンシをテーブルに非同期記録および当日のステップ別集計を返し、チャット画面下部にリアルタイム表示
+  - 全LLM呼び出しのトークン数・レイテンシをテーブルに非同期記録および当日のステップ別集計を返し、チャット画面下部にリアルタイム表示
 
 ---
 
@@ -144,7 +144,6 @@ graph TD
 
 </details>
 
-
 <details>
 <summary>画像アップロード詳細フロー図</summary>
 
@@ -169,7 +168,6 @@ graph TD
 ```
 
 </details>
-
 
 ### フォルダ連携フロー
 
@@ -258,20 +256,20 @@ graph TD
 
 ### 技術スタック
 
-| レイヤー | 技術 | バージョン | 役割 |
-|---------|------|----------|------|
-| Frontend | React / Vite / TanStack Router | 19 / 6 / 1.168+ | SPA・型安全ルーティング |
-| Frontend | Tailwind CSS | v4 | OKLCH ダークモード対応 |
-| Frontend | @ai-sdk/react | 3 | `useChat` フックでストリーミング受信 |
-| BFF | Hono / @hono/zod-validator | 4.12 / 0.7 | API ルーティング・入力バリデーション |
-| AI | Mastra (@mastra/core, @mastra/rag, @mastra/pg) | 1.22+ / 2.1+ / 1.8+ | RAG パイプライン・ベクトルストア操作 |
-| AI | AI SDK (ai) / @ai-sdk/google | 6 / 3 | LLM 統合・ストリーミング・Embedding |
-| LLM | Gemini 2.5 Flash | — | テキスト生成・Vision・Intent 分類 |
-| Embedding | gemini-embedding-001 | — | テキスト → ベクトル変換 |
-| Vector DB | PostgreSQL + pgvector | pg16 | ベクトル格納・コサイン類似度検索 |
-| Storage | MinIO（S3 互換） | — | PDF / 画像の原本保存 |
-| Monorepo | pnpm workspace | — | 共有パッケージ管理 |
-| Infra | Docker Compose | — | 全サービスのコンテナ化 |
+| レイヤー  | 技術                                           | バージョン          | 役割                                 |
+| --------- | ---------------------------------------------- | ------------------- | ------------------------------------ |
+| Frontend  | React / Vite / TanStack Router                 | 19 / 6 / 1.168+     | SPA・型安全ルーティング              |
+| Frontend  | Tailwind CSS                                   | v4                  | OKLCH ダークモード対応               |
+| Frontend  | @ai-sdk/react                                  | 3                   | `useChat` フックでストリーミング受信 |
+| BFF       | Hono / @hono/zod-validator                     | 4.12 / 0.7          | API ルーティング・入力バリデーション |
+| AI        | Mastra (@mastra/core, @mastra/rag, @mastra/pg) | 1.22+ / 2.1+ / 1.8+ | RAG パイプライン・ベクトルストア操作 |
+| AI        | AI SDK (ai) / @ai-sdk/google                   | 6 / 3               | LLM 統合・ストリーミング・Embedding  |
+| LLM       | Gemini 2.5 Flash                               | —                   | テキスト生成・Vision・Intent 分類    |
+| Embedding | gemini-embedding-001                           | —                   | テキスト → ベクトル変換              |
+| Vector DB | PostgreSQL + pgvector                          | pg16                | ベクトル格納・コサイン類似度検索     |
+| Storage   | MinIO（S3 互換）                               | —                   | PDF / 画像の原本保存                 |
+| Monorepo  | pnpm workspace                                 | —                   | 共有パッケージ管理                   |
+| Infra     | Docker Compose                                 | —                   | 全サービスのコンテナ化               |
 
 ---
 
@@ -354,7 +352,6 @@ graph TD
 - **マルチエージェント構成**
   - タスクの多様化対応
 
-
 ---
 
 ## セットアップ
@@ -385,13 +382,13 @@ pnpm dev
 
 ### 環境変数
 
-| 変数名 | 説明 | 取得先 |
-|--------|------|--------|
-| `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API キー | [Google AI Studio](https://aistudio.google.com/) |
-| `POSTGRES_CONNECTION_STRING` | PostgreSQL 接続文字列 | docker-compose.yml 参照 |
-| `S3_ENDPOINT` | MinIO エンドポイント | docker-compose.yml 参照 |
-| `S3_BUCKET` | S3 バケット名 | デフォルト: `rag-documents` |
-| `S3_ACCESS_KEY` / `S3_SECRET_KEY` | MinIO 認証情報 | デフォルト: `minioadmin` |
+| 変数名                            | 説明                  | 取得先                                           |
+| --------------------------------- | --------------------- | ------------------------------------------------ |
+| `GOOGLE_GENERATIVE_AI_API_KEY`    | Gemini API キー       | [Google AI Studio](https://aistudio.google.com/) |
+| `POSTGRES_CONNECTION_STRING`      | PostgreSQL 接続文字列 | docker-compose.yml 参照                          |
+| `S3_ENDPOINT`                     | MinIO エンドポイント  | docker-compose.yml 参照                          |
+| `S3_BUCKET`                       | S3 バケット名         | デフォルト: `rag-documents`                      |
+| `S3_ACCESS_KEY` / `S3_SECRET_KEY` | MinIO 認証情報        | デフォルト: `minioadmin`                         |
 
 ---
 

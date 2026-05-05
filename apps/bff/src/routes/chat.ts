@@ -175,10 +175,7 @@ chatRoute.post("/", zValidator("json", uiChatRequestSchema), async (c) => {
   ).filter((v): v is { type: "image"; image: string } => v !== null);
 
   const sourceFileNames = [
-    ...new Set([
-      ...textChunks.map((ch) => ch.fileName),
-      ...imageChunks.map((ch) => ch.fileName),
-    ]),
+    ...new Set([...textChunks.map((ch) => ch.fileName), ...imageChunks.map((ch) => ch.fileName)]),
   ];
 
   const contextBlock = textChunks

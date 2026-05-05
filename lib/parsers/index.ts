@@ -34,7 +34,7 @@ export function parseFile(filePath: string, fileType: FileType): ResultAsync<str
       default:
         return ResultAsync.fromPromise(
           Promise.reject(new Error(`Unsupported file type: ${fileType}`)),
-          toError
+          toError,
         );
     }
   });

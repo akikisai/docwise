@@ -27,11 +27,7 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function LocalSourceUI({
-  onSyncComplete,
-}: {
-  onSyncComplete: () => void;
-}) {
+export function LocalSourceUI({ onSyncComplete }: { onSyncComplete: () => void }) {
   const [files, setFiles] = useState<LocalFileEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<LocalSyncStatus | null>(null);
@@ -91,7 +87,7 @@ export function LocalSourceUI({
 
       pollingRef.current = setInterval(async () => {
         const statusRes = await fetch(
-          `${API_BASE}/api/local-sources/sync/status?jobId=${encodeURIComponent(data.jobId)}`
+          `${API_BASE}/api/local-sources/sync/status?jobId=${encodeURIComponent(data.jobId)}`,
         );
         if (!statusRes.ok) return;
         const statusData: LocalSyncStatus = await statusRes.json();
@@ -155,7 +151,11 @@ export function LocalSourceUI({
                      disabled:opacity-50 disabled:cursor-not-allowed
                      transition-all active:scale-[0.98]"
         >
-          <ArrowsClockwiseIcon size={14} weight="bold" className={isSyncing ? "animate-spin" : ""} />
+          <ArrowsClockwiseIcon
+            size={14}
+            weight="bold"
+            className={isSyncing ? "animate-spin" : ""}
+          />
           {isSyncing ? "取り込み中…" : "取り込み"}
         </button>
         <button
@@ -208,9 +208,7 @@ export function LocalSourceUI({
       )}
 
       {(error ?? syncStatus?.error) && (
-        <p className="text-xs text-destructive">
-          {error ?? syncStatus?.error}
-        </p>
+        <p className="text-xs text-destructive">{error ?? syncStatus?.error}</p>
       )}
 
       {/* ファイル一覧 */}
@@ -220,9 +218,7 @@ export function LocalSourceUI({
           スキャン中…
         </div>
       ) : files.length === 0 ? (
-        <p className="text-xs text-muted-foreground py-2">
-          対応ファイルが見つかりません
-        </p>
+        <p className="text-xs text-muted-foreground py-2">対応ファイルが見つかりません</p>
       ) : (
         <div className="space-y-0.5">
           <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-1">
@@ -234,9 +230,7 @@ export function LocalSourceUI({
                 key={file.relativePath}
                 className="flex items-center gap-2 py-1.5 px-1 text-xs rounded hover:bg-surface-secondary transition-colors"
               >
-                <span className="text-muted-foreground shrink-0">
-                  {fileIcon(file.fileType)}
-                </span>
+                <span className="text-muted-foreground shrink-0">{fileIcon(file.fileType)}</span>
                 <span className="flex-1 min-w-0 truncate text-foreground" title={file.relativePath}>
                   {file.relativePath}
                 </span>

@@ -21,8 +21,12 @@ function parsePdf(buf: Buffer): ResultAsync<{ text: string }, Error> {
       const origLog = console.log;
       const filter = (...args: unknown[]) =>
         typeof args[0] === "string" && args[0].includes("private use area");
-      console.warn = (...a: unknown[]) => { if (!filter(...a)) origWarn.apply(console, a); };
-      console.log = (...a: unknown[]) => { if (!filter(...a)) origLog.apply(console, a); };
+      console.warn = (...a: unknown[]) => {
+        if (!filter(...a)) origWarn.apply(console, a);
+      };
+      console.log = (...a: unknown[]) => {
+        if (!filter(...a)) origLog.apply(console, a);
+      };
       try {
         return await pdfParse(buf);
       } finally {
@@ -30,33 +34,31 @@ function parsePdf(buf: Buffer): ResultAsync<{ text: string }, Error> {
         console.log = origLog;
       }
     })(),
-    toError
+    toError,
   );
 }
 
 // ドキュメントのチャンク分割
 export function chunkDocument(
   text: string,
-  metadata: Record<string, unknown>
+  metadata: Record<string, unknown>,
 ): ResultAsync<Array<{ text: string; metadata?: Record<string, unknown> }>, Error> {
   const doc = MDocument.fromText(text, { metadata });
   return ResultAsync.fromPromise(
     doc.chunk({ strategy: "recursive", maxSize: 512, overlap: 50 }),
-    toError
+    toError,
   );
 }
 
 // チャンクのベクトル化
-export function embedChunks(
-  texts: string[]
-): ResultAsync<number[][], Error> {
+export function embedChunks(texts: string[]): ResultAsync<number[][], Error> {
   const start = performance.now();
   return withRetry(() =>
     embedMany({
       values: texts,
       model: google.embeddingModel("gemini-embedding-001"),
       providerOptions: { google: { outputDimensionality: 1536 } },
-    })
+    }),
   ).map((r) => {
     recordUsage({
       step: "embed_chunks",
@@ -74,20 +76,22 @@ export function embedChunks(
 export function upsertVectors(
   chunks: Array<{ text: string; metadata?: Record<string, unknown> }>,
   embeddings: number[][],
-  fileId: string
+  fileId: string,
 ): ResultAsync<void, Error> {
   const vectorStore = mastra.getVector("pgVector");
   return ResultAsync.fromPromise(
-    vectorStore.upsert({
-      indexName: "rag_chunks",
-      vectors: embeddings,
-      metadata: chunks.map((chunk, index) => ({
-        text: chunk.text,
-        fileId,
-        chunkIndex: index,
-      })),
-    }).then(() => undefined),
-    toError
+    vectorStore
+      .upsert({
+        indexName: "rag_chunks",
+        vectors: embeddings,
+        metadata: chunks.map((chunk, index) => ({
+          text: chunk.text,
+          fileId,
+          chunkIndex: index,
+        })),
+      })
+      .then(() => undefined),
+    toError,
   );
 }
 
@@ -114,24 +118,22 @@ export async function indexPdf({
   })
     .andThen(() => ensureBucket())
     .andThen(() => uploadToS3(s3Key, pdfBuffer, "application/pdf"))
-    .map(() => { JobStore.markUploaded(jobId, fileId); })
+    .map(() => {
+      JobStore.markUploaded(jobId, fileId);
+    })
     .andThen(() => parsePdf(pdfBuffer))
     .andThen(({ text }) => cleanseWithGemini(text))
-    .andThen((cleansedText) =>
-      chunkDocument(cleansedText, { fileId })
-    )
+    .andThen((cleansedText) => chunkDocument(cleansedText, { fileId }))
     .andThen((chunks) =>
-      embedChunks(chunks.map((c) => c.text)).map((embeddings) => ({ chunks, embeddings }))
+      embedChunks(chunks.map((c) => c.text)).map((embeddings) => ({ chunks, embeddings })),
     )
     .andThen(({ chunks, embeddings }) =>
-      upsertVectors(chunks, embeddings, fileId).map(
-        () => chunks.length
-      )
+      upsertVectors(chunks, embeddings, fileId).map(() => chunks.length),
     );
 
   result.match(
     (chunkCount) => JobStore.markDone(jobId, fileId, chunkCount),
-    (err) => JobStore.markFailed(jobId, err.message)
+    (err) => JobStore.markFailed(jobId, err.message),
   );
 }
 
@@ -169,7 +171,7 @@ export async function indexImage({
           ],
         },
       ],
-    })
+    }),
   ).map((r) => {
     recordUsage({
       step: "describe_image",
@@ -191,22 +193,20 @@ export async function indexImage({
   })
     .andThen(() => ensureBucket())
     .andThen(() => uploadToS3(s3Key, imageBuffer, contentType))
-    .map(() => { JobStore.markUploaded(jobId, fileId); })
+    .map(() => {
+      JobStore.markUploaded(jobId, fileId);
+    })
     .andThen(() => describeImage)
-    .andThen((description) =>
-      chunkDocument(description, { fileId })
-    )
+    .andThen((description) => chunkDocument(description, { fileId }))
     .andThen((chunks) =>
-      embedChunks(chunks.map((c) => c.text)).map((embeddings) => ({ chunks, embeddings }))
+      embedChunks(chunks.map((c) => c.text)).map((embeddings) => ({ chunks, embeddings })),
     )
     .andThen(({ chunks, embeddings }) =>
-      upsertVectors(chunks, embeddings, fileId).map(
-        () => chunks.length
-      )
+      upsertVectors(chunks, embeddings, fileId).map(() => chunks.length),
     );
 
   result.match(
     (chunkCount) => JobStore.markDone(jobId, fileId, chunkCount),
-    (err) => JobStore.markFailed(jobId, err.message)
+    (err) => JobStore.markFailed(jobId, err.message),
   );
 }

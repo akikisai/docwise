@@ -29,7 +29,7 @@ export function indexLocalFile({
         uploadType: 1,
         sourcePath: relativePath,
         contentHash,
-      })
+      }),
     )
     .andThen(() => parseFile(fullPath, fileType))
     .andThen((rawText) => {
@@ -48,10 +48,10 @@ export function indexLocalFile({
       }
       return chunkDocument(text, { fileId })
         .andThen((chunks) =>
-          embedChunks(chunks.map((c) => c.text)).map((embeddings) => ({ chunks, embeddings }))
+          embedChunks(chunks.map((c) => c.text)).map((embeddings) => ({ chunks, embeddings })),
         )
         .andThen(({ chunks, embeddings }) =>
-          upsertVectors(chunks, embeddings, fileId).map(() => chunks.length)
+          upsertVectors(chunks, embeddings, fileId).map(() => chunks.length),
         );
     });
 }

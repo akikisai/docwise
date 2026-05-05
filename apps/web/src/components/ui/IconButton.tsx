@@ -19,7 +19,7 @@ export function IconButton({
       className={cn(
         "shrink-0 p-1.5 rounded-md transition-all active:scale-[0.98]",
         variants[variant],
-        className
+        className,
       )}
     />
   );

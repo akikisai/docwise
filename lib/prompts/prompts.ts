@@ -3,8 +3,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const read = (file: string) =>
-  readFileSync(resolve(__dirname, file), "utf-8");
+const read = (file: string) => readFileSync(resolve(__dirname, file), "utf-8");
 
 export const PROMPT_VERSIONS = {
   KNOWLEDGE_SYSTEM: { id: "knowledge-system", version: "0.1.0" },

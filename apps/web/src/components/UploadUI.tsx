@@ -1,7 +1,12 @@
 import { useRef, useState } from "react";
 import { UploadSimpleIcon } from "@phosphor-icons/react";
 import { API_BASE } from "../lib/api";
-import type { UploadResponse, JobResponse, JobStatus, FileType } from "../../../../packages/shared/src/types";
+import type {
+  UploadResponse,
+  JobResponse,
+  JobStatus,
+  FileType,
+} from "../../../../packages/shared/src/types";
 
 export type UploadedFile = {
   jobId: string;
@@ -22,9 +27,7 @@ export function UploadUI({
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (!selectedFile) return;
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -58,7 +61,7 @@ export function UploadUI({
 
     const pollingInterval = setInterval(async () => {
       const statusResponse = await fetch(
-        `${API_BASE}/api/upload/status?jobId=${encodeURIComponent(uploadData.jobId)}`
+        `${API_BASE}/api/upload/status?jobId=${encodeURIComponent(uploadData.jobId)}`,
       );
       const jobStatus: JobResponse = await statusResponse.json();
 
@@ -102,9 +105,7 @@ export function UploadUI({
         <UploadSimpleIcon size={14} weight="bold" />
         <span>アップロード</span>
       </button>
-      <p className="text-[11px] text-muted-foreground">
-        PDF / PNG / JPG（20MB以下）
-      </p>
+      <p className="text-[11px] text-muted-foreground">PDF / PNG / JPG（20MB以下）</p>
     </div>
   );
 }

@@ -1,8 +1,4 @@
-import {
-  SpinnerIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-} from "@phosphor-icons/react";
+import { SpinnerIcon, CheckCircleIcon, XCircleIcon } from "@phosphor-icons/react";
 import { cn } from "../../lib/utils";
 
 const variants = {
@@ -26,20 +22,14 @@ const variants = {
 
 export type StatusBadgeVariant = keyof typeof variants;
 
-export function StatusBadge({
-  variant,
-  label,
-}: {
-  variant: StatusBadgeVariant;
-  label: string;
-}) {
+export function StatusBadge({ variant, label }: { variant: StatusBadgeVariant; label: string }) {
   const { className, icon } = variants[variant];
 
   return (
     <span
       className={cn(
         "shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium",
-        className
+        className,
       )}
     >
       {icon}

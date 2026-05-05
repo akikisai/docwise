@@ -16,11 +16,7 @@ export function SectionHeader({
         <Icon size={20} weight="duotone" className="text-muted-foreground" />
         <h2 className="text-base font-semibold tracking-tight">{title}</h2>
       </div>
-      {description && (
-        <p className="text-xs text-muted-foreground mt-0.5 ml-7">
-          {description}
-        </p>
-      )}
+      {description && <p className="text-xs text-muted-foreground mt-0.5 ml-7">{description}</p>}
     </div>
   );
 }

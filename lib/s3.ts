@@ -29,12 +29,12 @@ export function ensureBucket(): ResultAsync<void, Error> {
     (e) => ({
       raw: e,
       httpStatus: (e as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode,
-    })
+    }),
   ).orElse(({ raw, httpStatus }) => {
     if (httpStatus === 404) {
       return ResultAsync.fromPromise(
         s3Client.send(new CreateBucketCommand({ Bucket: BUCKET })).then(() => undefined),
-        toError
+        toError,
       );
     }
     return errAsync(toError(raw));
@@ -45,7 +45,7 @@ export function ensureBucket(): ResultAsync<void, Error> {
 export function uploadToS3(
   s3Key: string,
   fileBuffer: Buffer,
-  contentType: string
+  contentType: string,
 ): ResultAsync<void, Error> {
   return ResultAsync.fromPromise(
     s3Client
@@ -55,41 +55,36 @@ export function uploadToS3(
           Key: s3Key,
           Body: fileBuffer,
           ContentType: contentType,
-        })
+        }),
       )
       .then(() => undefined),
-    toError
+    toError,
   );
 }
 
 // S3からファイルをBase64形式で取得
-export function getFileAsBase64(s3Key: string): ResultAsync<
-  { base64: string; contentType: string },
-  Error
-> {
+export function getFileAsBase64(
+  s3Key: string,
+): ResultAsync<{ base64: string; contentType: string }, Error> {
   return ResultAsync.fromPromise(
-    s3Client.send(new GetObjectCommand({ Bucket: BUCKET, Key: s3Key })).then(
-      async (response) => {
-        if (!response.Body) {
-          throw new Error(`S3 オブジェクトの本文が空です: ${s3Key}`);
-        }
-        const bytes = await response.Body.transformToByteArray();
-        return {
-          base64: Buffer.from(bytes).toString("base64"),
-          contentType: response.ContentType ?? "application/octet-stream",
-        };
+    s3Client.send(new GetObjectCommand({ Bucket: BUCKET, Key: s3Key })).then(async (response) => {
+      if (!response.Body) {
+        throw new Error(`S3 オブジェクトの本文が空です: ${s3Key}`);
       }
-    ),
-    toError
+      const bytes = await response.Body.transformToByteArray();
+      return {
+        base64: Buffer.from(bytes).toString("base64"),
+        contentType: response.ContentType ?? "application/octet-stream",
+      };
+    }),
+    toError,
   );
 }
 
 // S3からファイルを削除
 export function deleteFromS3(s3Key: string): ResultAsync<void, Error> {
   return ResultAsync.fromPromise(
-    s3Client
-      .send(new DeleteObjectCommand({ Bucket: BUCKET, Key: s3Key }))
-      .then(() => undefined),
-    toError
+    s3Client.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: s3Key })).then(() => undefined),
+    toError,
   );
 }
